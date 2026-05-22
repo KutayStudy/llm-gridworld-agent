@@ -322,3 +322,19 @@ class GridWorldEnvironment:
             return True
 
         return False
+    
+    def is_walkable(self, position: Position) -> bool:
+        """Return True if the agent can stand on the given position."""
+        if not self._is_inside_grid(position):
+            return False
+
+        cell = self._get_cell(position)
+
+        if cell == self.WALL:
+            return False
+
+        if cell == self.DOOR:
+            if not self.door_open:
+                return False
+
+        return True
