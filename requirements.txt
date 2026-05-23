@@ -1,5 +1,5 @@
 pydantic
 python-dotenv
-openai
+google-genai
 pytest
 rich

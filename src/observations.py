@@ -14,8 +14,11 @@ class Observation(BaseModel):
     """Structured observation returned from the environment to the agent."""
     step: int
     position: list[int]
+    current_tile: str
     inventory: list[str]
     goal: str
+    current_objective: str
+    target_position: list[int] | None
     allowed_actions: list[str]
     visible_radius: int
     visibility_mode: str = "radius_based"
@@ -28,8 +31,11 @@ class Observation(BaseModel):
 
 def build_observation(step: int,
     position: tuple[int, int],
+    current_tile: str,
     inventory: list[str],
     goal: str,
+    current_objective: str,
+    target_position: list[int] | None,
     allowed_actions: list[str],
     visible_radius: int,
     visible_tiles: list[dict],
@@ -47,8 +53,11 @@ def build_observation(step: int,
     observation = Observation(
         step=step,
         position=list(position),
+        current_tile=current_tile,
         inventory=inventory.copy(),
         goal=goal,
+        current_objective=current_objective,
+        target_position=list(target_position) if target_position is not None else None,
         allowed_actions=allowed_actions,
         visible_radius=visible_radius,
         visible_tiles=visible_tiles,

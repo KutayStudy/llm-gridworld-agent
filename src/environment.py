@@ -109,8 +109,11 @@ class GridWorldEnvironment:
         observation = build_observation(
             step=self.step_count,
             position=self.agent_position,
+            current_tile=self.get_current_tile_type(),
             inventory=self.inventory,
             goal=goal,
+            current_objective=self.get_current_objective(),
+            target_position=self.get_target_position(),
             allowed_actions=get_allowed_actions(),
             visible_radius=self.visible_radius,
             visible_tiles=self._get_visible_tiles(),
@@ -338,3 +341,64 @@ class GridWorldEnvironment:
                 return False
 
         return True
+    
+    def get_current_tile_type(self) -> str:
+        """Return the type of the tile currently under the agent."""
+        if self.key_position is not None:
+            if self.agent_position == self.key_position:
+                return "key"
+
+        if self.goal_position is not None:
+            if self.agent_position == self.goal_position:
+                return "goal"
+
+        if self.door_position is not None:
+            if self.agent_position == self.door_position:
+                if self.door_open:
+                    return "open_door"
+                return "locked_door"
+
+        return "empty"
+    
+    def get_current_tile_type(self) -> str:
+        """Return the type of the tile currently under the agent."""
+        if self.key_position is not None:
+            if self.agent_position == self.key_position:
+                return "key"
+
+        if self.goal_position is not None:
+            if self.agent_position == self.goal_position:
+                return "goal"
+
+        if self.door_position is not None:
+            if self.agent_position == self.door_position:
+                if self.door_open:
+                    return "open_door"
+                return "locked_door"
+
+        return "empty"
+
+    def get_current_objective(self) -> str:
+        """Return the current high-level task objective."""
+        if "key" not in self.inventory:
+            return "go_to_key"
+
+        if not self.door_open:
+            return "go_to_door"
+
+        return "go_to_goal"
+
+    def get_target_position(self) -> Position | None:
+        """Return the current target position for the agent."""
+        current_objective = self.get_current_objective()
+
+        if current_objective == "go_to_key":
+            return self.key_position
+
+        if current_objective == "go_to_door":
+            return self.door_position
+
+        if current_objective == "go_to_goal":
+            return self.goal_position
+
+        return None
