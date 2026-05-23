@@ -1,6 +1,6 @@
 """Command-line entry point for running GridWorld agents."""
 
-from src.utils.logger import create_step_log, create_summary, save_run_log
+from src.utils.logger import create_step_log, create_summary, save_run_log,save_demo_log
 import argparse
 from src.agents.mock_agent import MockAgent
 from src.environment import GridWorldEnvironment
@@ -67,6 +67,7 @@ def run_agent(agent_type: str, max_steps: int, log_file: str | None = None) -> N
 
     if log_file is not None:
         save_run_log(log_file, run_log, summary)
+        save_demo_log("examples/demo_log.md", run_log, summary)
 
 
 def main() -> None:
